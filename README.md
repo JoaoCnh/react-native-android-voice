@@ -77,8 +77,8 @@ __Arguments__
 ## TODO
 
 - [x] Change Package/Module Name: from SpeechPackage to VoicePackage
-- [] Update ReadMe
-- [] Develop customization options for the module such as Custom text for the native activity and Locales
+- [ ] Update ReadMe
+- [ ] Develop customization options for the module such as Custom text for the native activity and Locales
 
 ## License
 
