@@ -1,5 +1,8 @@
 # react-native-android-voice
 
+[![DUB](https://img.shields.io/dub/l/vibe-d.svg?style=flat-square)](https://github.com/JoaoCnh/react-native-android-voice#license)
+[![npm version](https://badge.fury.io/js/react-native-android-voice.svg)](https://badge.fury.io/js/react-native-android-voice)
+
 react-native-android-voice is a speech-to-text library for [React Native](https://facebook.github.io/react-native/) for the Android Platform.
 
 ## Documentation
