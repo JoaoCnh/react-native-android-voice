@@ -15,6 +15,7 @@
     "text",
     "android"
   ],
+  "repository": "https://github.com/JoaoCnh/react-native-android-voice",
   "author": "WMJMC",
   "license": "MIT",
   "peerDependencies": {
