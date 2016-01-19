@@ -38,7 +38,7 @@ dependencies {
 * Register Module (in MainActivity.java)
 
 ```java
-import com.wmjmc.reactspeech.SpeechPackage;  // <--- import
+import com.wmjmc.reactspeech.VoicePackage;  // <--- import
 
 public class MainActivity extends ReactActivity {
 ...
@@ -46,7 +46,7 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new SpeechPackage()); // <--- added here
+        new VoicePackage()); // <--- added here
     }
 }
 ```
@@ -73,7 +73,7 @@ __Arguments__
 
 ## TODO
 
-- [] Change Package/Module Name: from SpeechPackage to VoicePackage
+- [x] Change Package/Module Name: from SpeechPackage to VoicePackage
 - [] Update ReadMe
 - [] Develop customization options for the module such as Custom text for the native activity and Locales
 
