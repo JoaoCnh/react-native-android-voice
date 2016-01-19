@@ -33,17 +33,29 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
         return "SpeechAndroid";
     }
 
+    private String getPrompt(String prompt){
+        if(prompt != null && !prompt.equals("")){
+            return prompt;
+        }
+
+        return "Say something";
+    }
+
     @ReactMethod
-    public void startSpeech(Promise promise) {
+    public void startSpeech(String prompt, Promise promise) {
         this.promise = promise;
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPrompt(prompt));
         if (intent.resolveActivity(this.reactContext.getPackageManager()) != null) {
-            this.reactContext.startActivityForResult(intent, REQUEST_SPEECH_ACTIVITY, null);
+            try{
+                this.reactContext.startActivityForResult(intent, REQUEST_SPEECH_ACTIVITY, null);
+            }catch(Exception ex){
+                this.promise.reject(ex.getMessage());
+            }
         }
     }
 
