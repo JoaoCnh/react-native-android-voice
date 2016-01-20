@@ -10,7 +10,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+
+import com.wmjmc.reactspeech.LocaleConstants;
 
 /**
  * Created by JMC on 14/01/2016.
@@ -33,12 +37,9 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
         return "SpeechAndroid";
     }
 
-    private String getPrompt(String prompt){
-        if(prompt != null && !prompt.equals("")){
-            return prompt;
-        }
-
-        return "Say something";
+    @Override
+    public Map<String, Object> getConstants() {
+        return LocaleConstants.getConstants();
     }
 
     @ReactMethod
@@ -65,4 +66,19 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
         this.promise.resolve(result.get(0));
     }
 
+    private String getPrompt(String prompt){
+        if(prompt != null && !prompt.equals("")){
+            return prompt;
+        }
+
+        return "Say something";
+    }
+
+    private Locale getLocale(Locale locale){
+        if(locale != null){
+            return locale;
+        }
+
+        return Locale.getDefault();
+    }
 }
