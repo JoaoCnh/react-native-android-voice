@@ -43,13 +43,13 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @ReactMethod
-    public void startSpeech(String prompt, Promise promise) {
+    public void startSpeech(String prompt, Locale locale, Promise promise) {
         this.promise = promise;
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(locale));
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getPrompt(prompt));
         if (intent.resolveActivity(this.reactContext.getPackageManager()) != null) {
             try{
