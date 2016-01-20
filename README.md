@@ -6,6 +6,7 @@
 react-native-android-voice is a speech-to-text library for [React Native](https://facebook.github.io/react-native/) for the Android Platform.
 
 ## Documentation
+- [Complete Docs](https://github.com/JoaoCnh/react-native-android-voice/wiki)
 - [Install](https://github.com/JoaoCnh/react-native-android-voice#install)
 - [Usage](https://github.com/JoaoCnh/react-native-android-voice#usage)
 - [Example](https://github.com/JoaoCnh/react-native-android-voice#example)
