@@ -25,7 +25,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
     static final int REQUEST_SPEECH_ACTIVITY = 1;
 
     final ReactApplicationContext reactContext;
-    Promise promise;
+    private Promise mVoicepromise;
 
     public VoiceModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -40,14 +40,21 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
 
     @Override
     public Map<String, Object> getConstants() {
-        return LocaleConstants.getConstants();
+        return Constants.getConstants();
     }
 
     @ReactMethod
-    public void startSpeech(String prompt, String locale, Promise promise) {
-        this.promise = promise;
+    public void startSpeech(String prompt, String locale, final Promise promise) {
+        Activity currentActivity = getCurrentActivity();
 
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        if (currentActivity == null) {
+            promise.reject(ErrorConstants.E_ACTIVITY_DOES_NOT_EXIST);
+            return;
+        }
+
+        mVoicepromise = promise;
+
+        final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(locale));
@@ -56,20 +63,41 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
             try{
                 this.reactContext.startActivityForResult(intent, REQUEST_SPEECH_ACTIVITY, null);
             }catch(Exception ex){
-                this.promise.reject(ex.getMessage());
+                mVoicepromise.reject(ErrorConstants.E_FAILED_TO_SHOW_VOICE);
+                mVoicepromise = null;
             }
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != Activity.RESULT_OK){
-            this.promise.reject("Something went wrong");
-            this.promise = null;
-        }else if(null != data){
-            ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            this.promise.resolve(result.get(0));
-            this.promise = null;
+
+        switch (resultCode){
+            case Activity.RESULT_OK:
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                mVoicepromise.resolve(result.get(0));
+                mVoicepromise = null;
+                break;
+            case Activity.RESULT_CANCELED:
+                mVoicepromise.reject(ErrorConstants.E_VOICE_CANCELLED);
+                mVoicepromise = null;
+                break;
+            case RecognizerIntent.RESULT_AUDIO_ERROR:
+                mVoicepromise.reject(ErrorConstants.E_AUDIO_ERROR);
+                mVoicepromise = null;
+                break;
+            case RecognizerIntent.RESULT_NETWORK_ERROR:
+                mVoicepromise.reject(ErrorConstants.E_NETWORK_ERROR);
+                mVoicepromise = null;
+                break;
+            case RecognizerIntent.RESULT_NO_MATCH:
+                mVoicepromise.reject(ErrorConstants.E_NO_MATCH);
+                mVoicepromise = null;
+                break;
+            case RecognizerIntent.RESULT_SERVER_ERROR:
+                mVoicepromise.reject(ErrorConstants.E_SERVER_ERROR);
+                mVoicepromise = null;
+                break;
         }
     }
 
