@@ -1,5 +1,6 @@
 package com.wmjmc.reactspeech;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
 
@@ -43,7 +44,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
     }
 
     @ReactMethod
-    public void startSpeech(String prompt, Locale locale, Promise promise) {
+    public void startSpeech(String prompt, String locale, Promise promise) {
         this.promise = promise;
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -62,8 +63,14 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-        this.promise.resolve(result.get(0));
+        if(resultCode != Activity.RESULT_OK){
+            this.promise.reject("Something went wrong");
+            this.promise = null;
+        }else if(null != data){
+            ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            this.promise.resolve(result.get(0));
+            this.promise = null;
+        }
     }
 
     private String getPrompt(String prompt){
@@ -74,11 +81,11 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
         return "Say something";
     }
 
-    private Locale getLocale(Locale locale){
-        if(locale != null){
+    private String getLocale(String locale){
+        if(locale != null && !locale.equals("")){
             return locale;
         }
 
-        return Locale.getDefault();
+        return Locale.getDefault().toString();
     }
 }
