@@ -57,7 +57,7 @@ public class MainActivity extends ReactActivity {
     }
 }
 ```
-## Example / Usage
+## Example / Usage v0.1.1
 
 ```javascript
 import SpeechAndroid from 'react-native-android-voice';
@@ -70,7 +70,43 @@ async _someFunction(){
 ...
 ```
 
-## Methods
+## Example v0.2.0 - Final tests being made before release
+
+- [x] Error Handling
+- [x] Custom Prompt
+- [x] Several Locales to choose from 
+
+##Example of what's to come
+
+```javascript
+...
+async _buttonClick(){
+    try{
+        //More Locales will be available upon release.
+        var spokenText = await SpeechAndroid.startSpeech("Speak yo", SpeechAndroid.GERMAN);
+        ToastAndroid.show(spokenText , ToastAndroid.LONG);
+    }catch(error){
+        switch(error){
+            case SpeechAndroid.E_VOICE_CANCELLED:
+                ToastAndroid.show("Voice Recognizer cancelled" , ToastAndroid.LONG);
+                break;
+            case SpeechAndroid.E_NO_MATCH:
+                ToastAndroid.show("No match for what you said" , ToastAndroid.LONG);
+                break;
+            case SpeechAndroid.E_SERVER_ERROR:
+                ToastAndroid.show("Google Server Error" , ToastAndroid.LONG);
+                break;
+            /*And more errors that will be documented on Docs upon release*/
+        }
+    }
+}
+...
+```
+
+This will automatically start recognizing and adjusting for the German Language.
+On release I'll update these docs with every single Locale available.
+
+## Methods v0.1.1
 
 ### startSpeech()
 Initializes the voice recognition activity and returns what you spoke in text.
@@ -81,8 +117,8 @@ __Arguments__
 ## TODO
 
 - [x] Change Package/Module Name: from SpeechPackage to VoicePackage
-- [ ] Update ReadMe
-- [ ] Develop customization options for the module such as Custom text for the native activity and Locales
+- [x] Update ReadMe
+- [x] Develop customization options for the module such as Custom text for the native activity and Locales
 
 ## License
 
