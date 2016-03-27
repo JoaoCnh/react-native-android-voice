@@ -71,6 +71,9 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mVoicepromise == null) {
+            return;
+        }
 
         switch (resultCode){
             case Activity.RESULT_OK:
