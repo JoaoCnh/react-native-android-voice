@@ -67,6 +67,12 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
                 mVoicepromise = null;
             }
         }
+        else{
+            Toast.makeText(getReactApplicationContext(),"Please enable Google Search!", Toast.LENGTH_SHORT).show();
+            Intent redirectToPlayStore= new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.googlequicksearchbox"));
+            redirectToPlayStore.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.reactContext.startActivity(redirectToPlayStore);
+        }
     }
 
     @Override
