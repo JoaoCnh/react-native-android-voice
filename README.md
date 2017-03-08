@@ -27,7 +27,7 @@ npm install --save react-native-android-voice
 ### Linking the Library
 ### Add it to your android project
 
-* In `android/setting.gradle`
+* In `android/settings.gradle`
 
 ```gradle
 ...
@@ -44,12 +44,12 @@ dependencies {
     compile project(':VoiceModule')
 }
 ```
-* Register Module (in MainActivity.java)
+* Register Module (in MainApplication.java)
 
 ```java
 import com.wmjmc.reactspeech.VoicePackage;  // <--- import
 
-public class MainActivity extends ReactActivity {
+public class MainApplication extends Application implements ReactApplication {
 ...
     @Override
     protected List<ReactPackage> getPackages() {
