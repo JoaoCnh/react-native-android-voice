@@ -125,10 +125,6 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
         return "Say something";
     }
 
-    public void onNewIntent(Intent intent) {
-        // no-op
-    }
-
     private String getLocale(String locale){
         if(locale != null && !locale.equals("")){
             return locale;
