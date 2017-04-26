@@ -22,7 +22,7 @@ import com.wmjmc.reactspeech.LocaleConstants;
  */
 public class VoiceModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
-    static final int REQUEST_SPEECH_ACTIVITY = 1;
+    static final int REQUEST_SPEECH_ACTIVITY = 1105; // Random Number
 
     final ReactApplicationContext reactContext;
     private Promise mVoicepromise;
@@ -84,33 +84,35 @@ public class VoiceModule extends ReactContextBaseJavaModule implements ActivityE
             return;
         }
 
-        switch (resultCode){
-            case Activity.RESULT_OK:
-                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                mVoicepromise.resolve(result.get(0));
-                mVoicepromise = null;
-                break;
-            case Activity.RESULT_CANCELED:
-                mVoicepromise.reject(ErrorConstants.E_VOICE_CANCELLED);
-                mVoicepromise = null;
-                break;
-            case RecognizerIntent.RESULT_AUDIO_ERROR:
-                mVoicepromise.reject(ErrorConstants.E_AUDIO_ERROR);
-                mVoicepromise = null;
-                break;
-            case RecognizerIntent.RESULT_NETWORK_ERROR:
-                mVoicepromise.reject(ErrorConstants.E_NETWORK_ERROR);
-                mVoicepromise = null;
-                break;
-            case RecognizerIntent.RESULT_NO_MATCH:
-                mVoicepromise.reject(ErrorConstants.E_NO_MATCH);
-                mVoicepromise = null;
-                break;
-            case RecognizerIntent.RESULT_SERVER_ERROR:
-                mVoicepromise.reject(ErrorConstants.E_SERVER_ERROR);
-                mVoicepromise = null;
-                break;
-        }
+        if(requestCode == REQUEST_SPEECH_ACTIVITY){
+          switch (resultCode){
+              case Activity.RESULT_OK:
+                  ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                  mVoicepromise.resolve(result.get(0));
+                  mVoicepromise = null;
+                  break;
+              case Activity.RESULT_CANCELED:
+                  mVoicepromise.reject(ErrorConstants.E_VOICE_CANCELLED);
+                  mVoicepromise = null;
+                  break;
+              case RecognizerIntent.RESULT_AUDIO_ERROR:
+                  mVoicepromise.reject(ErrorConstants.E_AUDIO_ERROR);
+                  mVoicepromise = null;
+                  break;
+              case RecognizerIntent.RESULT_NETWORK_ERROR:
+                  mVoicepromise.reject(ErrorConstants.E_NETWORK_ERROR);
+                  mVoicepromise = null;
+                  break;
+              case RecognizerIntent.RESULT_NO_MATCH:
+                  mVoicepromise.reject(ErrorConstants.E_NO_MATCH);
+                  mVoicepromise = null;
+                  break;
+              case RecognizerIntent.RESULT_SERVER_ERROR:
+                  mVoicepromise.reject(ErrorConstants.E_SERVER_ERROR);
+                  mVoicepromise = null;
+                  break;
+          }
+      }
     }
 
     public void onNewIntent(Intent intent) {
