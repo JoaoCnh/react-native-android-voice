@@ -1,6 +1,6 @@
 {
-  "name": "react-native-android-voice",
-  "version": "0.6.0",
+  "name": "react-native-kie-android-voice",
+  "version": "0.1.1",
   "description": "A React Native Voice Recognition Module",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/JoaoCnh/react-native-android-voice.git"
+    "url": "git@github.com:sujithps/react-native-kie-android-voice.git"
   },
-  "author": "WMJMC",
+  "author": "kie",
   "license": "MIT",
   "peerDependencies": {
     "react-native": ">=0.13"

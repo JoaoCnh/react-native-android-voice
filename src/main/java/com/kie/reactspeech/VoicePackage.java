@@ -1,4 +1,4 @@
-package com.wmjmc.reactspeech;
+package com.kie.reactspeech;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

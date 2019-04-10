@@ -1,27 +1,27 @@
-# react-native-android-voice
+# react-native-kie-android-voice
 
-[![DUB](https://img.shields.io/dub/l/vibe-d.svg?style=flat-square)](https://github.com/JoaoCnh/react-native-android-voice#license)
-[![npm version](https://badge.fury.io/js/react-native-android-voice.svg)](https://badge.fury.io/js/react-native-android-voice)
+[![DUB](https://img.shields.io/dub/l/vibe-d.svg?style=flat-square)](https://github.com/JoaoCnh/react-native-kie-android-voice#license)
+[![npm version](https://badge.fury.io/js/react-native-kie-android-voice.svg)](https://badge.fury.io/js/react-native-kie-android-voice)
 
-react-native-android-voice is a speech-to-text library for [React Native](https://facebook.github.io/react-native/) for the Android Platform.
+react-native-kie-android-voice is a speech-to-text library for [React Native](https://facebook.github.io/react-native/) for the Android Platform.
 
-##Any Feedback and Ideas are welcome! please use the [Issues](https://github.com/JoaoCnh/react-native-android-voice/issues) section above
+##Any Feedback and Ideas are welcome! please use the [Issues](https://github.com/JoaoCnh/react-native-kie-android-voice/issues) section above
 
 ## Documentation
-- [Complete Docs](https://github.com/JoaoCnh/react-native-android-voice/wiki)
-- [Install](https://github.com/JoaoCnh/react-native-android-voice#install)
-- [Usage](https://github.com/JoaoCnh/react-native-android-voice#usage)
-- [Example](https://github.com/JoaoCnh/react-native-android-voice#example)
-- [Methods](https://github.com/JoaoCnh/react-native-android-voice#methods)
-- [Available Locales](https://github.com/JoaoCnh/react-native-android-voice#locales)
-- [Error Handling](https://github.com/JoaoCnh/react-native-android-voice#errors)
-- [TODO](https://github.com/JoaoCnh/react-native-android-voice#todo)
-- [License](https://github.com/JoaoCnh/react-native-android-voice#license)
+- [Complete Docs](https://github.com/JoaoCnh/react-native-kie-android-voice/wiki)
+- [Install](https://github.com/JoaoCnh/react-native-kie-android-voice#install)
+- [Usage](https://github.com/JoaoCnh/react-native-kie-android-voice#usage)
+- [Example](https://github.com/JoaoCnh/react-native-kie-android-voice#example)
+- [Methods](https://github.com/JoaoCnh/react-native-kie-android-voice#methods)
+- [Available Locales](https://github.com/JoaoCnh/react-native-kie-android-voice#locales)
+- [Error Handling](https://github.com/JoaoCnh/react-native-kie-android-voice#errors)
+- [TODO](https://github.com/JoaoCnh/react-native-kie-android-voice#todo)
+- [License](https://github.com/JoaoCnh/react-native-kie-android-voice#license)
 
 ## Install
 
 ```shell
-npm install --save react-native-android-voice
+npm install --save react-native-kie-android-voice
 ```
 ## Usage
 ### Linking the Library
@@ -32,7 +32,7 @@ npm install --save react-native-android-voice
 ```gradle
 ...
 include ':VoiceModule', ':app'
-project(':VoiceModule').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-android-voice')
+project(':VoiceModule').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-kie-android-voice')
 ```
 
 * In `android/app/build.gradle`
@@ -47,7 +47,7 @@ dependencies {
 * Register Module (in MainApplication.java)
 
 ```java
-import com.wmjmc.reactspeech.VoicePackage;  // <--- import
+import com.kie.reactspeech.VoicePackage;  // <--- import
 
 public class MainApplication extends Application implements ReactApplication {
 ...
@@ -62,7 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
 ## Example
 
 ```javascript
-import SpeechAndroid from 'react-native-android-voice';
+import SpeechAndroid from 'react-native-kie-android-voice';
 
 ...
 async _buttonClick(){

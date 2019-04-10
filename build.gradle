@@ -17,16 +17,17 @@ android {
         }
     }
     lintOptions {
-       warning 'InvalidPackage'
+        warning 'InvalidPackage'
     }
 }
 
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -37,5 +38,17 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.facebook.react:react-native:+'
+    compile 'com.facebook.react:react-native:0.55.4'
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+        google()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "/Users/sujiths/Documents/Psnl/kiebot_mob/node_modules/react-native/android"
+        }
+    }
 }

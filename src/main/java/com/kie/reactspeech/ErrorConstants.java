@@ -1,4 +1,4 @@
-package com.wmjmc.reactspeech;
+package com.kie.reactspeech;
 
 import android.app.Activity;
 

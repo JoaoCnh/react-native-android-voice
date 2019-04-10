@@ -1,58 +1,27 @@
-package com.wmjmc.reactspeech;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
-import android.speech.RecognitionListener;
-
-import com.facebook.react.bridge.ActivityEventListener;
-import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-
-import android.os.Bundle;
-
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import com.wmjmc.reactspeech.LocaleConstants;
+package com.kie.reactspeech;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognitionListener;
-import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nullable;
@@ -63,11 +32,10 @@ import javax.annotation.Nullable;
 public class VoiceModule extends ReactContextBaseJavaModule implements RecognitionListener {
 
     final ReactApplicationContext reactContext;
-    private SpeechRecognizer speech = null;
-    private boolean isRecognizing = false;
+    private static SpeechRecognizer speech = null;
     private String locale = null;
 
-    private Promise mVoicepromise;
+    private Promise voicePromise;
     private String expectedText;
 
     public VoiceModule(ReactApplicationContext reactContext) {
@@ -85,8 +53,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
     private void startListening() {
         if (speech != null) {
-            speech.destroy();
-            speech = null;
+            stopListening();
         }
 
         speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext);
@@ -98,6 +65,13 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, getLocale(this.locale));
 
         speech.startListening(intent);
+    }
+
+    private void stopListening() {
+        speech.stopListening();
+        speech.cancel();
+        speech.destroy();
+        speech = null;
     }
 
     @Override
@@ -129,7 +103,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
         this.expectedText = expectedText;
         this.locale = locale;
-        this.mVoicepromise = promise;
+        this.voicePromise = promise;
 
 
         Handler mainHandler = new Handler(this.reactContext.getMainLooper());
@@ -138,10 +112,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
             public void run() {
                 try {
                     startListening();
-                    isRecognizing = true;
                 } catch (Exception e) {
-                    mVoicepromise.reject(ErrorConstants.E_FAILED_TO_SHOW_VOICE + e.getMessage());
-                    mVoicepromise = null;
+                    voicePromise.reject(ErrorConstants.E_FAILED_TO_SHOW_VOICE, e.getMessage());
+                    voicePromise = null;
+                    stopListening();
                 }
             }
         });
@@ -154,7 +128,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {
-        Toast.makeText(getReactApplicationContext(), "eventName : " + eventName + " , params: " + params, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getReactApplicationContext(), "EventName :: " + eventName + " , params: " + params, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -167,21 +141,15 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
     @Override
     public void onEndOfSpeech() {
-        WritableMap event = Arguments.createMap();
-        event.putBoolean("error", false);
-        sendEvent("onSpeechEnd", event);
-        Log.d("ASR", "onEndOfSpeech()");
-        mVoicepromise.resolve(event);
-        mVoicepromise = null;
-        isRecognizing = false;
     }
 
     @Override
     public void onError(int errorCode) {
-        String errorMessage = String.format("%d/%s", errorCode, getErrorText(errorCode));
+        String errorMessage = getErrorText(errorCode);
 
-        mVoicepromise.reject(errorMessage);
-        mVoicepromise = null;
+        voicePromise.reject(String.valueOf(errorCode), errorMessage);
+        voicePromise = null;
+        stopListening();
     }
 
     @Override
@@ -200,6 +168,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
         WritableMap event = Arguments.createMap();
         event.putArray("value", arr);
         sendEvent("onSpeechPartialResults", event);
+
         Log.d("ASR", "onPartialResults()");
     }
 
@@ -213,11 +182,12 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
 
         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         boolean foundMatch = false;
-        String gtResult = null;
+        String matchingWord = "";
         for (String result : matches) {
-            if (result.equalsIgnoreCase(expectedText)) {
+            matchingWord = result;
+            if (expectedText.trim().equalsIgnoreCase(result)) {
                 foundMatch = true;
-                gtResult = result;
+                break;
             }
             arr.pushString(result);
         }
@@ -226,8 +196,16 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
         event.putArray("value", arr);
         sendEvent("onSpeechResults", event);
 
-        Toast.makeText(getReactApplicationContext(), "FOUUUUUNDDD : " + foundMatch + " - " + matches, Toast.LENGTH_LONG).show();
+        if (voicePromise != null) {
+            WritableMap resultEvent = Arguments.createMap();
+            resultEvent.putBoolean("valid", foundMatch);
+            resultEvent.putString("match", matchingWord);
 
+            voicePromise.resolve(resultEvent);
+
+            voicePromise = null;
+            stopListening();
+        }
         Log.d("ASR", "onResults()");
     }
 
